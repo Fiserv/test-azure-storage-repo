@@ -17,8 +17,8 @@ jobs:
       - name: Install Azure CLI
         run: sudo apt install az
       - name: Upload Repositories
-        uses: github-developer/upload-azure-blob@v1
+        uses: azure/storage/blob@v1
         with:
           account: ${{ secrets.AZURE_STORAGE_ACCOUNT_NAME }}
-          destination: ${{ secrets.AZURE_STORAGE_CONTAINER_NAME }}
+          container: ${{ secrets.AZURE_STORAGE_CONTAINER_NAME }}
           source: .
