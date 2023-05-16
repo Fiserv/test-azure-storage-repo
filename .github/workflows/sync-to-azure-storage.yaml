@@ -3,7 +3,7 @@ name: Upload GitHub Repositories
 on:
   push:
     branches:
-      - develop
+      - main
 
 jobs:
   upload:
@@ -17,8 +17,24 @@ jobs:
       - name: Install Azure CLI
         run: sudo apt install az
       - name: Upload Repositories
+        uses: actions/upload-artifact@v2
+        with:
+          name: repositories
+          path: .
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: upload
+    steps:
+      - uses: actions/checkout@v2
+      - name: Configure Azure
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+      - name: Upload Repositories to Azure Blob Storage
         uses: azure/storage/blob@v1
         with:
           account: ${{ secrets.AZURE_STORAGE_ACCOUNT_NAME }}
           container: ${{ secrets.AZURE_STORAGE_CONTAINER_NAME }}
-          source: .
+          source: ${{ steps.upload.outputs.artifacts[0].name }}
+      - run: echo "Upload complete"
