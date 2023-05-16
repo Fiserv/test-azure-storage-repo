@@ -3,7 +3,7 @@ name: Upload GitHub Repositories
 on:
   push:
     branches:
-      - main
+      - develop
 
 jobs:
   upload:
