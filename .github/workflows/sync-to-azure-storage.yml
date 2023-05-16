@@ -1,0 +1,62 @@
+name: Sync Repository to Azure Storage
+
+on:
+  push:
+    branches:
+      - develop
+      - stage
+      - main
+      - preview
+    # Run the workflow on every push to the main branch
+  schedule:
+    - cron: "0 * * * *"
+    # Run the workflow every hour
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Check for new commits
+        id: check-commits
+        run: |
+          COMMIT_COUNT=$(git rev-list --count HEAD..${{ github.sha }})
+          if [[ $COMMIT_COUNT -eq 0 ]]; then
+            echo "::set-output name=has-commits::false"
+          else
+            echo "::set-output name=has-commits::true"
+          fi
+
+      - name: Configure Azure
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Upload Repositories & Check if repository exists in Azure Storage
+        if: steps.check-commits.outputs.has-commits == 'true'
+        uses: azure/CLI@v1
+        with:
+          azcliversion: latest
+          inlineScript: |
+            az storage blob upload-batch --destination-container ${{ secrets.AZURE_STORAGE_CONTAINER_NAME }} --source . --account-name ${{ secrets.AZURE_STORAGE_ACCOUNT_NAME }}
+
+            repo_exists=$(az storage blob list --container-name ${{ secrets.AZURE_STORAGE_CONTAINER_NAME }} --account-name ${{ secrets.AZURE_STORAGE_ACCOUNT_NAME }} --query "[?name=='${{ github.repository }}']")
+            if [[ -z $repo_exists ]]; then
+              echo "::set-output name=repo-exists::false"
+            else
+              echo "::set-output name=repo-exists::true"
+            fi
+
+      - name: Sync Repository
+        if: steps.check-commits.outputs.has-commits == 'true' && steps.check-repo.outputs.repo-exists != 'true'
+        uses: azure/CLI@v1
+        with:
+          azcliversion: latest
+          inlineScript: |
+            # Your logic to sync the repository with Azure Storage
+            # This can include retrieving the repository contents and uploading to Azure Storage
+            # Use Azure CLI commands or an Azure SDK in any programming language to perform the sync operation
+            echo "Syncing the repository with Azure Storage"
