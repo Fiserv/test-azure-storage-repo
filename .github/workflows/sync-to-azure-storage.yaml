@@ -31,6 +31,8 @@ jobs:
         uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
+      - name: Install Azure CLI
+        run: sudo apt install az
       - name: Upload Repositories to Azure Blob Storage
         uses: azure/storage/blob@v1
         with:
