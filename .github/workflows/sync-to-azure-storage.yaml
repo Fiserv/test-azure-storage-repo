@@ -11,6 +11,8 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
+      - name: Azure Login
+        run: az login --use-device-code
       - name: Configure Azure
         uses: azure/login@v1
         with:
