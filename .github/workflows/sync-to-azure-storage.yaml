@@ -15,7 +15,7 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
       - name: Install Azure CLI
-        shell: sudo apt install az
+        run: sudo apt install az
       - name: Upload Repositories
         uses: github-developer/upload-azure-blob@v1
         with:
