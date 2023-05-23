@@ -26,8 +26,8 @@ jobs:
       - name: Install Azure CLI
         run: |
           curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
-      - name: Print Azure credentials
-        run: echo "${{ secrets.AZURE_SERVICE_PRINCIPAL }}"
+      - name: Update Azure CLI
+        run: az upgrade --yes
       - name: Azure Login
         uses: azure/login@v1
         with:
