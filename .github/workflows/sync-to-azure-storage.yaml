@@ -1,9 +1,17 @@
 name: Upload GitHub Repositories
 
 on:
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+  workflow_call:
+  #Triggers the workflow on push or pull request events but only for the dev , stage and main branch
   push:
     branches:
       - develop
+#     # Run the workflow on every push to the main branch
+#   schedule:
+#     - cron: "0 * * * *"
+#     # Run the workflow every hour
 
 jobs:
   upload:
