@@ -23,13 +23,15 @@ jobs:
         run: echo "${{ secrets.AZURE_CREDENTIALS }}"
       - name: Verify Azure CLI installation
         run: az --version
-      - name: Azure Login
-        uses: azure/login@v1
-        with:
-          creds: ${{ secrets.AZURE_SERVICE_PRINCIPAL }}
       - name: Install Azure CLI
         run: |
           curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
+      - name: Azure Login
+        uses: azure/login@v1
+        run: echo "${{ secrets.AZURE_SERVICE_PRINCIPAL }}"
+        with:
+          creds: ${{ secrets.AZURE_SERVICE_PRINCIPAL }}
+    
       - name: Debug - List Azure Subscriptions
         run: az account list
       - name: Upload Repositories
