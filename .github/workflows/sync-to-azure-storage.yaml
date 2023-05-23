@@ -32,7 +32,9 @@ jobs:
         uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_SERVICE_PRINCIPAL }}
-    
+          environment: azurecloud
+          allow-no-subscriptions: false
+          audience: api://AzureADTokenExchange
       - name: Debug - List Azure Subscriptions
         run: az account list
       - name: Upload Repositories
