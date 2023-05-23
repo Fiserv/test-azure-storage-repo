@@ -37,11 +37,11 @@ jobs:
           audience: api://AzureADTokenExchange
       - name: Debug - List Azure Subscriptions
         run: az account list
-      - name: Upload Repositories
-        uses: actions/upload-artifact@v2
-        with:
-          name: repositories
-          path: .
+#       - name: Upload Repositories
+#         uses: actions/upload-artifact@v2
+#         with:
+#           name: repositories
+#           path: .
 
 
 #   deploy:
